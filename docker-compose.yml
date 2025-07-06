@@ -1,10 +1,42 @@
+version: '3'
+
 services:
-  navidrome:
-    image: deluan/navidrome:latest
-    user: 0:0
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    container_name: nginx-proxy
+    restart: always
     ports:
-      - "4533:4533"
-    restart: unless-stopped
+      - "80:80"
+      - "443:443"
     volumes:
-      - "~/data:/data"
-      - "~/music:/music:ro"
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./acme:/etc/acme.sh
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: acme-companion
+    depends_on:
+      - nginx-proxy
+    environment:
+      - DEFAULT_EMAIL=${EMAIL}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./acme:/etc/acme.sh
+
+  navidrome:
+    image: deluan/navidrome
+    container_name: navidrome
+    restart: unless-stopped
+    expose:
+      - "4533"
+    environment:
+      - VIRTUAL_HOST=${DOMAIN}
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+      - ND_SCANSCHEDULE=1h
+      - ND_LOGLEVEL=info
+    volumes:
+      - ./data:/data
+      - ./music:/music
