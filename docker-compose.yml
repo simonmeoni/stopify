@@ -43,3 +43,21 @@ services:
     volumes:
       - ./data:/data
       - ./music:/music
+
+  syncthing:
+    image: syncthing/syncthing:latest
+    container_name: syncthing
+    restart: unless-stopped
+    ports:
+      - "8384:8384"
+      - "22000:22000/tcp"
+      - "21027:21027/udp"
+    volumes:
+      - ./syncthing/config:/var/syncthing/config
+      - ./music:/var/syncthing/music
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VIRTUAL_HOST=syncthing.${DOMAIN}
+      - LETSENCRYPT_HOST=syncthing.${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
