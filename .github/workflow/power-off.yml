@@ -1,0 +1,15 @@
+name: Power OFF
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  power-off:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Power OFF server
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.HETZNER_TOKEN }}" \
+            "https://api.hetzner.cloud/v1/servers/${{ secrets.HETZNER_SERVER_ID }}/actions/shutdown"
