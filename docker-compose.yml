@@ -47,6 +47,8 @@ services:
   syncthing:
     image: syncthing/syncthing:latest
     container_name: syncthing
+    expose:
+       - "8384"
     restart: unless-stopped
     ports:
       - "8384:8384"
