@@ -10,6 +10,7 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./acme-challenge:/usr/share/nginx/html
       - ./certs:/etc/nginx/certs
       - ./acme:/etc/acme.sh
 
@@ -25,6 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/etc/nginx/certs
       - ./acme:/etc/acme.sh
+      - ./acme-challenge:/usr/share/nginx/html
 
   navidrome:
     image: deluan/navidrome
