@@ -65,7 +65,7 @@ services:
       - LETSENCRYPT_EMAIL=${EMAIL}
 
   flac2mp3:
-    build: ./flac-to-mp3
+    build: ./flac2mp3
     container_name: flac2mp3
     restart: unless-stopped
     volumes:
