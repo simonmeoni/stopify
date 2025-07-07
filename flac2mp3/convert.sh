@@ -25,14 +25,14 @@ convert_flac() {
 	fi
 }
 
-echo "[INIT] Starting initial scan of existing .flac files..."
-find "$SRC_DIR" -type f -iname '*.flac' | while read -r FILE; do
+echo "[INIT] Starting initial scan..."
+find "$SRC_DIR" -type f -iname '*.flac' -print0 | while IFS= read -r -d '' FILE; do
 	convert_flac "$FILE"
 done
 echo "[INIT] Initial scan complete."
 
 echo "[WATCH] Watching '$SRC_DIR' for new FLAC files..."
-inotifywait -m -r -e close_write,moved_to,create "$SRC_DIR" --format '%w%f' | while read -r FILE; do
+inotifywait -m -r -e close_write,moved_to,create --format '%w%f' "$SRC_DIR" | while read -r FILE; do
 	[[ "$FILE" != *.flac ]] && continue
 	convert_flac "$FILE"
 done
