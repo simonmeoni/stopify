@@ -7,7 +7,18 @@ from watchdog.events import FileSystemEventHandler
 
 SRC_DIR = Path("/music")
 DST_DIR = Path("/music_mp3")
-COPY_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "bmp", "cue", "log", "txt", "nfo"}
+COPY_EXTENSIONS = {
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "bmp",
+    "cue",
+    "log",
+    "txt",
+    "nfo",
+    "mp3",
+}
 
 
 def convert_flac(src_file: Path):
@@ -17,7 +28,19 @@ def convert_flac(src_file: Path):
 
     if not out_path.exists():
         print(f"[INFO] Converting: {rel_path}")
-        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(src_file), "-ab", "320k", str(out_path)])
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-loglevel",
+                "error",
+                "-y",
+                "-i",
+                str(src_file),
+                "-ab",
+                "320k",
+                str(out_path),
+            ]
+        )
         print(f"[INFO] Done: {out_path}")
     else:
         print(f"[SKIP] Already exists: {out_path}")
