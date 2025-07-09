@@ -36,8 +36,7 @@ def convert_flac(src_file: Path):
                 "-y",
                 "-i",
                 str(src_file),
-                "-ab",
-                "320k",
+                "-q:a 1",
                 str(out_path),
             ]
         )
